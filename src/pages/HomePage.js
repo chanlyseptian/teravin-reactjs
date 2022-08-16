@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { RiAddCircleLine } from "react-icons/ri";
 import { EmptyData, ListData } from "../components";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const itemList = JSON.parse(localStorage.getItem("teravin"));
 
   return (
     <div className="container mx-auto p-5 2xl:px-28">
@@ -18,8 +20,7 @@ const HomePage = () => {
         <RiAddCircleLine className="mr-1 text-md" /> Add Data
       </button>
 
-      {/* <EmptyData/> */}
-      <ListData />
+      {itemList === null ? <EmptyData /> : <ListData itemList={itemList}/>}
     </div>
   );
 };

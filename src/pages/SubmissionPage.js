@@ -51,7 +51,7 @@ const SubmissionPage = () => {
     <div className="container mx-auto p-5 2xl:px-28">
       <button
         className="mb-4 flex items-center font-semibold text-gray-600 hover:text-gray-900 hover:font-bold"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate('/')}
       >
         {"<"} Back
       </button>

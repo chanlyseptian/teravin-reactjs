@@ -1,43 +1,76 @@
-import { useStepperContext } from "../../../contexts/StepperContext";
+import React, { useState } from "react";
+import { addSkillsAsync } from "../../../redux/actions";
+import { useDispatch } from "react-redux";
 
 export default function Skills() {
-  const { userData, setUserData } = useStepperContext();
+  const dispatch = useDispatch();
+  let [skills, setSkills] = useState([
+    {
+      id: 1,
+      skillName: "",
+    },
+  ]);
 
-  const handleChange = (e) => {
+  const handleChange = (i) => (e) => {
     const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
+    let items = [...skills];
+    items[i] = { ...items[i], [name]: value };
+    setSkills(items);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(addSkillsAsync(skills));
+  };
+
+  const tambahSkills = () => {
+    let idCount = skills[skills.length - 1].id + 1;
+    setSkills((skills) => [
+      ...skills,
+      {
+        id: idCount,
+        skillName: "",
+      },
+    ]);
+  };
+
   return (
-    <div className="flex flex-col ">
-      <div className="w-full mx-2 flex-1">
-        <div className="font-bold h-6 mt-3 text-gray-500 text-xs leading-8 uppercase">
-          Credit Card
+    <>
+      <form onSubmit={handleSubmit}>
+        {skills.map((input, i) => (
+          <div key={i} className="flex flex-col ">
+            <div className="w-full mx-2 flex-1">
+              <div className="font-bold h-6 mt-3 text-gray-500 text-base leading-8 capitalize">
+                Skills
+              </div>
+              <div className="bg-white my-2 p-1 flex border border-gray-200 rounded">
+                <input
+                  onChange={handleChange(i)}
+                  value={input.skillName}
+                  name="skillName"
+                  id="skillName"
+                  type="text"
+                  className="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+        <div className=" mt-3">
+          <button
+            onClick={tambahSkills}
+            className="bg-gray-400 hover:bg-gray-500 py-2.5 px-3 rounded text-white "
+          >
+            + Add Data
+          </button>
+          <button
+            onClick={() => alert("Data berhasil disimpan")}
+            className="bg-green-500 hover:bg-green-700 py-2.5 px-3 ml-2 rounded text-white"
+          >
+            Save Data
+          </button>
         </div>
-        <div className="bg-white my-2 p-1 flex border border-gray-200 rounded">
-          <input
-            onChange={handleChange}
-            value={userData["card"] || ""}
-            name="card"
-            placeholder="Credit Card#"
-            className="p-1 px-2 appearance-none outline-none w-full text-gray-800"
-          />
-        </div>
-      </div>
-      <div className="w-full mx-2 flex-1">
-        <div className="font-bold h-6 mt-3 text-gray-500 text-xs leading-8 uppercase">
-          Exp
-        </div>
-        <div className="bg-white my-2 p-1 flex border border-gray-200 rounded">
-          <input
-            onChange={handleChange}
-            value={userData["exp"] || ""}
-            name="exp"
-            placeholder="YY/MM/DD"
-            type="text"
-            className="p-1 px-2 appearance-none outline-none w-full text-gray-800"
-          />
-        </div>
-      </div>
-    </div>
+      </form>
+    </>
   );
 }
